@@ -31,6 +31,7 @@ import tqdm
 
 from instagram_scraper.constants import *
 
+import atexit
 
 
 try:
@@ -458,6 +459,9 @@ class InstagramScraper(object):
 
                 if self.include_location:
                     media_exec = concurrent.futures.ThreadPoolExecutor(max_workers=5)
+
+                # save file before exit the program
+                atexit.register(self.save_json, { 'GraphImages': self.posts }, '{0}/{1}.json'.format(dst, value))
 
                 iter = 0
                 for item in tqdm.tqdm(media_generator(value), desc='Searching {0} for posts'.format(value), unit=" media",
